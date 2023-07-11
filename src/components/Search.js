@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { mockSearchResults } from "../constants/mock";
+import { XMarkIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import SearchResults from "./SearchResults";
 
 const Search = () => {
   const [input, setInput] = useState("");
@@ -11,7 +13,7 @@ const Search = () => {
   };
 
   const updateBestMatches = () => {
-    setBestMatches(mockSearchResults.results);
+    setBestMatches(mockSearchResults.result);
   };
 
   return (
@@ -22,14 +24,29 @@ const Search = () => {
         className="w-full px-4 py-2 focus outline-none rounded-md"
         placeholder="Search stock..."
         onChange={(event) => {
-            setInput(event.target.value)
+          setInput(event.target.value);
         }}
         onKeyPress={(event) => {
-            if(event.key === "Enter") {
-                updateBestMatches();
-            }
+          if (event.key === "Enter") {
+            updateBestMatches();
+          }
         }}
       />
+      {input && ( 
+        <button onClick={clear} className="m-1">
+          <XMarkIcon className="h-6 w-6 fill-gray-500" />
+        </button>
+      )}
+
+      <button
+        onClick={updateBestMatches}
+        className="h-8 w-8 bg-indigo-600 rounded-md flex justify-center items-center m-1 p-2"
+      >
+        <MagnifyingGlassIcon className="h-4 w-4 fill-gray-100" />
+      </button>
+      {input && bestMatches.length > 0 ? (
+        <SearchResults results={bestMatches} />
+      ) : null}
     </div>
   );
 };
