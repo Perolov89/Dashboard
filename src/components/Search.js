@@ -13,7 +13,7 @@ const Search = () => {
   };
 
   const updateBestMatches = () => {
-    setBestMatches(mockSearchResults.result);
+    setBestMatches(mockSearchResults.result)
   };
 
   return (
@@ -24,7 +24,7 @@ const Search = () => {
         className="w-full px-4 py-2 focus outline-none rounded-md"
         placeholder="Search stock..."
         onChange={(event) => {
-          setInput(event.target.value);
+          setInput(event.target.value)
         }}
         onKeyPress={(event) => {
           if (event.key === "Enter") {
