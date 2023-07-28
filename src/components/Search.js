@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
-import { mockSearchResults } from "../constants/mock";
 import { XMarkIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import SearchResults from "./SearchResults";
 import ThemeContext from "../context/ThemeContext";
+import { searchSymbol } from "../api/stock-api";
 
 const Search = () => {
   const [input, setInput] = useState("");
-  const [bestMatches, setBestMatches] = useState(mockSearchResults.result);
+  const [bestMatches, setBestMatches] = useState([]);
 
   const { darkMode } = useContext(ThemeContext);
 
@@ -15,9 +15,20 @@ const Search = () => {
     setBestMatches([]);
   };
 
-  const updateBestMatches = () => {
-    setBestMatches(mockSearchResults.result);
+  const updateBestMatches = async () => {
+    try {
+      if (input) {
+        const searchResults = await searchSymbol(input);
+        const result = searchResults.result;
+        setBestMatches(result);
+
+      }
+    } catch (error) {
+      setBestMatches([]);
+      console.log(error);
+    }
   };
+
 
   return (
     <div
@@ -28,13 +39,11 @@ const Search = () => {
       <input
         type="text"
         value={input}
-        className={`w-full px-4 py-2 focus:outline-none rounded-md bg-white border-neutral-200 ${
+        className={`w-full px-4 py-2 focus:outline-none rounded-md ${
           darkMode ? "bg-gray-900" : null
         }`}
         placeholder="Search stock..."
-        onChange={(event) => {
-          setInput(event.target.value);
-        }}
+        onChange={(event) => setInput(event.target.value)}
         onKeyPress={(event) => {
           if (event.key === "Enter") {
             updateBestMatches();
@@ -49,7 +58,7 @@ const Search = () => {
 
       <button
         onClick={updateBestMatches}
-        className="h-8 w-8 bg-indigo-600 rounded-md flex justify-center items-center m-1 p-2"
+        className="h-8 w-8 bg-indigo-600 rounded-md flex justify-center items-center m-1 p-2 transition duration-300 hover:ring-2 ring-indigo-400"
       >
         <MagnifyingGlassIcon className="h-4 w-4 fill-gray-100" />
       </button>
